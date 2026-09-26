@@ -1,0 +1,43 @@
+[package]
+name = "casper-shot"
+version = "1.0.0"
+edition = "2021"
+description = "CASPER Shot — global-hotkey screenshot capture, saved as WebP"
+license = "GPL-3.0-or-later"
+
+[[bin]]
+name = "casper_shot"
+path = "src/main.rs"
+
+[dependencies]
+# libwebp est chargée au démarrage (voir src/webp.rs), pas liée.
+windows-sys = { version = "0.61.2", features = [
+    "Win32_Foundation",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Shell",
+    "Win32_UI_HiDpi",
+    "Win32_UI_Controls",
+    "Win32_Graphics_Gdi",
+    "Win32_Graphics_Dwm",
+    "Win32_System_Com",
+    "Win32_System_DataExchange",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Memory",
+    "Win32_System_Ole",
+    "Win32_System_SystemInformation",
+    "Win32_System_Threading",
+    "Win32_Security",
+] }
+
+# Ressources de l'exe : icône, version (date de build) et manifeste.
+[build-dependencies]
+winresource = "0.1"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+# panic = "unwind" (défaut) : un panic dans le thread d'un aperçu n'arrête
+# que ce thread.
